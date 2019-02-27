@@ -9,6 +9,7 @@ steps:
   args: ['build',
     '-t', 'gcr.io/$PROJECT_ID/lm-explorer:$COMMIT_SHA',
     '-t', 'gcr.io/$PROJECT_ID/lm-explorer:latest',
+    '--cache-from', 'gcr.io/$PROJECT_ID/lm-explorer:latest',
     '.'
   ]
 # Upload the built Docker images to Google Cloud Registry (GCR).
