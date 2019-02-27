@@ -22,7 +22,7 @@ steps:
 - name: 'gcr.io/cloud-builders/kubectl'
   entrypoint: '/bin/bash'
   args: [
-    './deploy.sh',
+    '.skiff/deploy.sh',
     'gcr.io/$PROJECT_ID/lm-explorer:$COMMIT_SHA',
     '$_DOMAIN'
   ]
