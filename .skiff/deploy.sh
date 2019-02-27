@@ -17,7 +17,7 @@ usage() {
   echo "Usage:"
   echo "  ./deploy.sh IMAGE"
   echo ""
-  echo "  IMAGE   the image version to deploy, i.e. gcr.io/ai2-reviz/skiff-ui:latest"
+  echo "  IMAGE   the image version to deploy, i.e. gcr.io/ai2-reviz/lm-explorer:latest"
   echo ""
 }
 
@@ -32,14 +32,14 @@ if [[ -z "$image" ]]; then
 fi
 
 set +e
-$kubectl_cmd get namespace/skiff-ui &> /dev/null
+$kubectl_cmd get namespace/lm-explorer &> /dev/null
 namespace_exists=$?
 set -e
 if [[ "$namespace_exists" != "0" ]]; then
-  echo "creating skiff-ui namespace…"
-  $kubectl_cmd create namespace skiff-ui
+  echo "creating lm-explorer namespace…"
+  $kubectl_cmd create namespace lm-explorer
 else
-  echo "namespace skiff-ui already exists…"
+  echo "namespace lm-explorer already exists…"
 fi;
 
 echo "deploying '$image'…"

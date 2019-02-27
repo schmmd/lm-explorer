@@ -31,5 +31,5 @@ steps:
   ]
   env: [
     'CLOUDSDK_COMPUTE_ZONE=us-west1',
-    'CLOUDSDK_CONTAINER_CLUSTER=$_CLUSTER'
+    'CLOUDSDK_CONTAINER_CLUSTER=skiff-prod'
   ]
