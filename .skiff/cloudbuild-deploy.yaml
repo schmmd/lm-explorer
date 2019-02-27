@@ -7,20 +7,17 @@ steps:
     '--cache-from', 'gcr.io/$PROJECT_ID/lm-explorer:latest',
     '.'
   ]
-  dir: 'ui'
 # Upload the built Docker images to Google Cloud Registry (GCR).
 - name: 'gcr.io/cloud-builders/docker'
   args: [
     'push',
     'gcr.io/$PROJECT_ID/lm-explorer:$COMMIT_SHA'
   ]
-  dir: 'ui'
 - name: 'gcr.io/cloud-builders/docker'
   args: [
     'push',
     'gcr.io/$PROJECT_ID/lm-explorer:latest'
   ]
-  dir: 'ui'
 # Execute a deploy of the Docker image on Kubernetes.
 - name: 'gcr.io/cloud-builders/kubectl'
   entrypoint: '/bin/bash'
@@ -33,4 +30,3 @@ steps:
     'CLOUDSDK_COMPUTE_ZONE=us-west1',
     'CLOUDSDK_CONTAINER_CLUSTER=$_CLUSTER'
   ]
-  dir: 'ui'
