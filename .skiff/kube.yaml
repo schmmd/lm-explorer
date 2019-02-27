@@ -58,8 +58,6 @@ spec:
     spec:
       containers:
         - name: lm-explorer
-          args:
-            - start
           image: 'gcr.io/ai2-reviz/lm-explorer:latest'
           readinessProbe:
             failureThreshold: 3
