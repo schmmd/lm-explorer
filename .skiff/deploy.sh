@@ -1,42 +1,56 @@
-#
-# This script exists to perform variable substitution on a Kubernetes configuration
-# before sending it to the kubectl command.
-#
-
 #!/bin/bash
 set -e
 
-# Get the path to this script.
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+# If $PROJECT_ID is set, we're running in Google Cloud Build, which means
+# we need to invole /builder/kubectl.bash instead of the standard kubectl.
+# This is because /builder/kubectl.bash includes the right configuration
+# for authenticating against the target cluster.
+kubectl_cmd="kubectl"
+if [[ ! -z "$CLOUDSDK_COMPUTE_ZONE" ]]; then
+  kubectl_cmd="/builder/kubectl.bash"
+fi
 
 usage() {
   echo ""
   echo "Usage:"
-  echo "  ./deploy.sh DOMAIN"
+  echo "  ./deploy.sh IMAGE DOMAIN"
   echo ""
-  echo "  DOMAIN  the desired domain, i.e. 'lm-explorer.dev.apps.allenai.org'"
+  echo "  IMAGE   the image version to deploy, i.e. gcr.io/ai2-reviz/skiff-ui:latest"
+  echo "  DOMAIN  the top level domain directed to the cluster, i.e. 'dev.apps.allenai.org'"
   echo ""
 }
 
-domain=$1
+echo "using '$kubectl_cmd'…"
+
+# Figure out the image we'd like to deploy, and complain if it's empty.
+image=$1
+if [[ -z "$image" ]]; then
+  echo "Error: no image specified."
+  usage
+  exit 1
+fi
+
+domain=$2
 if [[ -z "$domain" ]]; then
   echo "Error: no domain specified."
   usage
   exit 1
 fi
 
-# Disable failing on errors since Kubernetes has a bug and dies when a namespace doesn't exist.
-# See TODO(michaels).
 set +e
-kubectl get namespace/lm-explorer &> /dev/null
+$kubectl_cmd get namespace/skiff-ui &> /dev/null
 namespace_exists=$?
 set -e
 if [[ "$namespace_exists" != "0" ]]; then
-  echo "creating lm-explorer namespace..."
-  kubectl create namespace lm-explorer
+  echo "creating skiff-ui namespace…"
+  $kubectl_cmd create namespace skiff-ui
 else
-  echo "namespace lm-explorer already exists..."
+  echo "namespace skiff-ui already exists…"
 fi;
 
-# Substitute variables with information passed in and forward the configuration to kubectl.
-sed "s#%DOMAIN%#$domain#g" < $dir/kube.yaml | kubectl apply -f -
+echo "deploying '$image' to '$domain'…"
+
+# Deploy the latest UI
+sed "s#%IMAGE%#$image#g" < $dir/kube.yaml | sed "s#%DOMAIN%#$domain#g" | $kubectl_cmd apply -f -
