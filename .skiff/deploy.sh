@@ -14,7 +14,7 @@ usage() {
   echo "Usage:"
   echo "  ./deploy.sh DOMAIN"
   echo ""
-  echo "  DOMAIN  the desired domain, i.e. 'buoy.dev.apps.allenai.org'"
+  echo "  DOMAIN  the desired domain, i.e. 'lm-explorer.dev.apps.allenai.org'"
   echo ""
 }
 
@@ -28,14 +28,14 @@ fi
 # Disable failing on errors since Kubernetes has a bug and dies when a namespace doesn't exist.
 # See TODO(michaels).
 set +e
-kubectl get namespace/buoy &> /dev/null
+kubectl get namespace/lm-explorer &> /dev/null
 namespace_exists=$?
 set -e
 if [[ "$namespace_exists" != "0" ]]; then
-  echo "creating buoy namespace..."
-  kubectl create namespace buoy
+  echo "creating lm-explorer namespace..."
+  kubectl create namespace lm-explorer
 else
-  echo "namespace buoy already exists..."
+  echo "namespace lm-explorer already exists..."
 fi;
 
 # Substitute variables with information passed in and forward the configuration to kubectl.
