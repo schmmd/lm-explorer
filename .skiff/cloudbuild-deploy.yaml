@@ -23,8 +23,7 @@ steps:
   entrypoint: '/bin/bash'
   args: [
     '.skiff/deploy.sh',
-    'gcr.io/$PROJECT_ID/lm-explorer:$COMMIT_SHA',
-    '$_DOMAIN'
+    'gcr.io/$PROJECT_ID/lm-explorer:$COMMIT_SHA'
   ]
   env: [
     'CLOUDSDK_COMPUTE_ZONE=us-west1',

@@ -8,14 +8,14 @@ spec:
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
-  commonName: %DOMAIN%
+  commonName: lm-explorer.apps.allenai.org
   dnsNames:
-  - %DOMAIN%
+  - lm-explorer.apps.allenai.org
   config:
     - http01:
         ingressClass: nginx
       domains:
-      - %DOMAIN%
+      - lm-explorer.apps.allenai.org
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -31,9 +31,9 @@ spec:
   tls:
     - secretName: lm-explorer-tls
       hosts:
-      - %DOMAIN%
+      - lm-explorer.apps.allenai.org
   rules:
-  - host: %DOMAIN%
+  - host: lm-explorer.apps.allenai.org
     http:
       paths:
       - backend:
@@ -48,7 +48,7 @@ metadata:
   name: lm-explorer
   namespace: lm-explorer
 spec:
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
@@ -80,9 +80,6 @@ spec:
             requests:
               cpu: "1"
               memory: 1000Mi
-          env:
-          - name: NODE_ENV
-            value: production
 ---
 apiVersion: v1
 kind: Service

@@ -15,10 +15,9 @@ fi
 usage() {
   echo ""
   echo "Usage:"
-  echo "  ./deploy.sh IMAGE DOMAIN"
+  echo "  ./deploy.sh IMAGE"
   echo ""
   echo "  IMAGE   the image version to deploy, i.e. gcr.io/ai2-reviz/skiff-ui:latest"
-  echo "  DOMAIN  the top level domain directed to the cluster, i.e. 'dev.apps.allenai.org'"
   echo ""
 }
 
@@ -28,13 +27,6 @@ echo "using '$kubectl_cmd'…"
 image=$1
 if [[ -z "$image" ]]; then
   echo "Error: no image specified."
-  usage
-  exit 1
-fi
-
-domain=$2
-if [[ -z "$domain" ]]; then
-  echo "Error: no domain specified."
   usage
   exit 1
 fi
@@ -50,7 +42,7 @@ else
   echo "namespace skiff-ui already exists…"
 fi;
 
-echo "deploying '$image' to '$domain'…"
+echo "deploying '$image'…"
 
 # Deploy the latest UI
-sed "s#%IMAGE%#$image#g" < $dir/kube.yaml | sed "s#%DOMAIN%#$domain#g" | $kubectl_cmd apply -f -
+sed "s#%IMAGE%#$image#g" < $dir/kube.yaml | $kubectl_cmd apply -f -
