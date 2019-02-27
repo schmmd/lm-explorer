@@ -1,10 +1,10 @@
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: Certificate
 metadata:
-  name: lmexplorer-certificate
-  namespace: lmexplorer
+  name: lm-explorer-certificate
+  namespace: lm-explorer
 spec:
-  secretName: lmexplorer-tls
+  secretName: lm-explorer-tls
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
