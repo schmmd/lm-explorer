@@ -1,4 +1,9 @@
 steps:
+# Pull the current latest image, so we can use its cached layers.
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['pull',
+    'gcr.io/$PROJECT_ID/lm-explorer:latest'
+  ]
 # Build the Docker image and tag with the current SHA and latest.
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build',
