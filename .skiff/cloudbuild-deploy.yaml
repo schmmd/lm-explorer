@@ -1,0 +1,36 @@
+steps:
+# Build the Docker image and tag with the current SHA and latest.
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build',
+    '-t', 'gcr.io/$PROJECT_ID/lm-explorer:$COMMIT_SHA',
+    '-t', 'gcr.io/$PROJECT_ID/lm-explorer:latest',
+    '--cache-from', 'gcr.io/$PROJECT_ID/lm-explorer:latest',
+    '.'
+  ]
+  dir: 'ui'
+# Upload the built Docker images to Google Cloud Registry (GCR).
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'push',
+    'gcr.io/$PROJECT_ID/lm-explorer:$COMMIT_SHA'
+  ]
+  dir: 'ui'
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'push',
+    'gcr.io/$PROJECT_ID/lm-explorer:latest'
+  ]
+  dir: 'ui'
+# Execute a deploy of the Docker image on Kubernetes.
+- name: 'gcr.io/cloud-builders/kubectl'
+  entrypoint: '/bin/bash'
+  args: [
+    './deploy.sh',
+    'gcr.io/$PROJECT_ID/lm-explorer:$COMMIT_SHA',
+    '$_DOMAIN'
+  ]
+  env: [
+    'CLOUDSDK_COMPUTE_ZONE=us-west1',
+    'CLOUDSDK_CONTAINER_CLUSTER=$_CLUSTER'
+  ]
+  dir: 'ui'
