@@ -58,7 +58,7 @@ spec:
     spec:
       containers:
         - name: lm-explorer
-          image: 'gcr.io/ai2-reviz/lm-explorer:latest'
+          image: '%IMAGE%'
           readinessProbe:
             failureThreshold: 3
             httpGet:
